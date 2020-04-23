@@ -50,6 +50,7 @@ class HomeActivity : SweatWorksActivity(), MviView<HomeIntent, HomeViewState> {
     private lateinit var favUsersLayoutManager: LinearLayoutManager
 
     private val limit = 100
+    private var renderCount = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +123,8 @@ class HomeActivity : SweatWorksActivity(), MviView<HomeIntent, HomeViewState> {
     }
 
     override fun render(state: HomeViewState) {
-        Log.d(TAG, "State: $state")
+        Log.d(TAG, "Render: $renderCount")
+        renderCount++
         if(state.isProcessing) {
             progressBar.visibility = View.VISIBLE
         }else{
@@ -137,7 +139,7 @@ class HomeActivity : SweatWorksActivity(), MviView<HomeIntent, HomeViewState> {
 
         if(state.searching) {
             if (state.usersMatch.toJSON() != users.toJSON()) {
-                updateUsersList(state.usersMatch)
+                updateUsersList(state.usersMatch, false)
             }
 
             if (state.usersMatch.toJSON() != favoriteUsers.toJSON()) {
@@ -150,15 +152,19 @@ class HomeActivity : SweatWorksActivity(), MviView<HomeIntent, HomeViewState> {
             }
 
             if (state.users.toJSON() != users.toJSON()) {
-                updateUsersList(state.users)
+                updateUsersList(state.users, true)
             }
         }
 
     }
 
-    private fun updateUsersList(newList: List<User>) {
-        users.clear()
-        users.addAll(newList)
+    private fun updateUsersList(newList: List<User>, justAdd: Boolean) {
+        if(justAdd) {
+            users.addAll(newList)
+        }else {
+            users.clear()
+            users.addAll(newList)
+        }
         usersAdapter.notifyDataSetChanged()
     }
 

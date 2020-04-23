@@ -18,8 +18,7 @@ class RandomUserRepository(private val application: SweatWorks): SweatWorksRepos
 
     override fun getUsers(results: Int?): Observable<UserResponse> {
         return application.apiRandomUser!!.getUsers(results).doOnNext{
-            users.clear()
-            it.results?.let{users.addAll(it)}
+            it.results?.let{u -> users.addAll(u)}
         }
     }
 

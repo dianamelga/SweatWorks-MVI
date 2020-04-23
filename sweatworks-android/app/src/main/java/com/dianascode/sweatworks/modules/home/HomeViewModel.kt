@@ -106,8 +106,6 @@ class HomeViewModel(
             result: SearchUserResult
         ): HomeViewState = when(result) {
             is SearchUserResult.Processing -> previousState.copy(
-                error = null,
-                searching = false
             )
             is SearchUserResult.Success -> previousState.copy(
                 error = null,
