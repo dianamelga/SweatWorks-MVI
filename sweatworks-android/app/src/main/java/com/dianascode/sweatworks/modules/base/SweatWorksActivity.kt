@@ -1,13 +1,11 @@
 package com.dianascode.sweatworks.modules.base
 
-import android.app.Dialog
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.os.Build
+import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.*
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import com.dianascode.sweatworks.R
 import com.dianascode.sweatworks.models.SweatWorksError
 import com.dianascode.sweatworks.utils.UtilTools
@@ -15,9 +13,6 @@ import retrofit2.HttpException
 
 open class SweatWorksActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     fun handleError(e: Throwable) {
         if (e is HttpException) {
@@ -47,4 +42,12 @@ open class SweatWorksActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    fun requestToBeLayoutFullscreen() {
+        window?.decorView?.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
+    }
+
+
 }

@@ -2,21 +2,26 @@ package com.dianascode.sweatworks.modules.home
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.updatePadding
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dianascode.sweatworks.R
+import com.dianascode.sweatworks.dialogs.SettingsFragmentDialog
 import com.dianascode.sweatworks.models.User
 import com.dianascode.sweatworks.modules.base.SweatWorksActivity
 import com.dianascode.sweatworks.modules.home.HomeIntent.*
-import com.dianascode.sweatworks.dialogs.SettingsFragmentDialog
 import com.dianascode.sweatworks.modules.userDetail.UserDetailActivity
 import com.dianascode.sweatworks.modules.userDetail.adapters.UserAdapter
 import com.dianascode.sweatworks.mvibase.MviView
@@ -26,6 +31,8 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.toolbar_view.*
+
 
 class HomeActivity : SweatWorksActivity(), MviView<HomeIntent, HomeViewState> {
 
@@ -57,10 +64,20 @@ class HomeActivity : SweatWorksActivity(), MviView<HomeIntent, HomeViewState> {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            requestToBeLayoutFullscreen()
+            adaptViewForInsets()
+        }
         configureUI()
     }
 
+
+
     private fun configureUI() {
+        setSupportActionBar(appToolbar as Toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        tvToolbarTitle.text = "SweatWorks"
+
         usersAdapter = UserAdapter(users, this) { goToUserDetail(it) }
         favUsersAdapter = UserAdapter(favoriteUsers, this) { goToUserDetail(it) }
 
@@ -242,6 +259,25 @@ class HomeActivity : SweatWorksActivity(), MviView<HomeIntent, HomeViewState> {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT_WATCH)
+    private fun adaptViewForInsets() {
+        val toolbarPaddingTop = toolbar.paddingTop
+        // Register OnApplyWindowInsetsListener
+        window?.decorView?.setOnApplyWindowInsetsListener { _, windowInsets ->
+            // Update toolbar's top padding to accommodate system window top inset
+            val newToolbarTopPadding =
+                windowInsets.systemWindowInsetTop + toolbarPaddingTop
+            toolbar.updatePadding(top = newToolbarTopPadding)
+
+            // Update user recyclerView's bottom padding to accommodate
+            // system window bottom inset
+
+            //rvUsers.updatePadding(bottom = windowInsets.systemWindowInsetBottom)
+
+            windowInsets
+        }
     }
 
 

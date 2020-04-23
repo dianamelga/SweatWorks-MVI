@@ -5,4 +5,5 @@
     <dimen name="size_favorite_icon">50dp</dimen>
     <dimen name="half_margin">8dp</dimen>
     <dimen name="default_margin">16dp</dimen>
+    <dimen name="biggest">20sp</dimen>
 </resources>

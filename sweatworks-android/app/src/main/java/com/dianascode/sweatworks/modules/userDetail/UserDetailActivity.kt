@@ -12,7 +12,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.ViewModelProvider
 import com.dianascode.sweatworks.R
 import com.dianascode.sweatworks.models.User
@@ -27,6 +29,8 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.activity_user_detail.*
+import kotlinx.android.synthetic.main.activity_user_detail.tvTitle
+import kotlinx.android.synthetic.main.toolbar_view.*
 
 class UserDetailActivity : SweatWorksActivity(), MviView<UserDetailIntent, UserDetailViewState> {
 
@@ -47,13 +51,22 @@ class UserDetailActivity : SweatWorksActivity(), MviView<UserDetailIntent, UserD
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_detail)
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            adaptViewForInsets()
+            requestToBeLayoutFullscreen()
+        }
+
         configureUI()
         configureClickListeners()
     }
 
     private fun configureUI() {
+        setSupportActionBar(appToolbar as Toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        tvToolbarTitle.text = "SweatWorks"
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "User Detail"
 
         user = intent.extras?.getSerializable(USER_SELECTED) as User
         user.apply {
@@ -205,6 +218,24 @@ class UserDetailActivity : SweatWorksActivity(), MviView<UserDetailIntent, UserD
         }
 
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT_WATCH)
+    private fun adaptViewForInsets() {
+        val toolbarPaddingTop = toolbar.paddingTop
+        // Register OnApplyWindowInsetsListener
+        window?.decorView?.setOnApplyWindowInsetsListener { _, windowInsets ->
+            // Update toolbar's top padding to accommodate system window top inset
+            val newToolbarTopPadding =
+                windowInsets.systemWindowInsetTop + toolbarPaddingTop
+            toolbar.updatePadding(top = newToolbarTopPadding)
+
+            // Update layout's bottom padding to accommodate
+            // system window bottom inset
+            //coordLayout.updatePadding(bottom = windowInsets.systemWindowInsetBottom)
+
+            windowInsets
+        }
     }
 
 
