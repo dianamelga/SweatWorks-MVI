@@ -3,16 +3,10 @@ A challenge from SweatWorks for Android
 
 Support: Android 4.1 (API level 16) and above
 
-
-### Developer ###
-
-* [Diana Melgarejo](https://github.com/dianamelga)
-
-
 ### Libraries:
 * [RxKotlin](https://github.com/ReactiveX/RxKotlin) //Threading
 * [Material](https://material.io/develop/android/docs/getting-started/) //Design
-* [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
+* [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel) //Lifecycle
 * [Retrofit](https://square.github.io/retrofit/) //Networking
 * [Gson](https://github.com/google/gson) //JSON parser
 * [Lottie](https://github.com/airbnb/lottie-android) //Animations
